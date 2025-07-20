@@ -1,0 +1,3 @@
+tfhub_cache/
+*.pyc
+*.pkl

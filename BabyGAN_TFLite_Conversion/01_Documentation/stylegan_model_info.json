@@ -1,0 +1,78 @@
+{
+  "file_path": "content/BabyGAN/karras2019stylegan-ffhq-1024x1024.pkl",
+  "file_size_mb": 309.68967151641846,
+  "model_type": "StyleGAN",
+  "resolution": 1024,
+  "latent_size": 512,
+  "num_layers": 18,
+  "architecture": "NVIDIA StyleGAN (karras2019)",
+  "dataset": "FFHQ (Flickr-Faces-HQ)",
+  "conversion_notes": [],
+  "conversion_challenges": [
+    "Dynamic graph construction from pickled Python code",
+    "TensorFlow 1.x session-based architecture",
+    "Custom dnnlib framework with proprietary operations",
+    "High resolution (1024x1024) may be too large for mobile",
+    "Uses tf.contrib operations not available in TF2/TFLite"
+  ],
+  "recommended_conversion": {
+    "approach": "Use pre-converted or PyTorch implementations",
+    "alternatives": [
+      {
+        "name": "stylegan2-pytorch",
+        "url": "https://github.com/rosinality/stylegan2-pytorch",
+        "advantages": "Better conversion support, active community"
+      },
+      {
+        "name": "MobileStyleGAN",
+        "url": "https://github.com/bes-dev/MobileStyleGAN.pytorch",
+        "advantages": "Designed for mobile, smaller model size"
+      },
+      {
+        "name": "TensorFlow Hub StyleGAN2",
+        "url": "https://tfhub.dev/google/stylegan2",
+        "advantages": "Official TF2 implementation, easier conversion"
+      }
+    ]
+  },
+  "conversion_steps": [
+    {
+      "step": 1,
+      "name": "Model Selection",
+      "description": "Choose a TensorFlow 2.x or PyTorch implementation",
+      "recommendation": "Use stylegan2-pytorch for best results"
+    },
+    {
+      "step": 2,
+      "name": "Weight Transfer",
+      "description": "Convert weights from this pickle to chosen framework",
+      "tools": [
+        "convert_weight.py scripts available in repos"
+      ]
+    },
+    {
+      "step": 3,
+      "name": "Resolution Reduction",
+      "description": "Reduce from 1024x1024 to 256x256 or 512x512",
+      "reason": "Mobile memory and performance constraints"
+    },
+    {
+      "step": 4,
+      "name": "Export to ONNX",
+      "description": "Export PyTorch/TF2 model to ONNX format",
+      "command": "torch.onnx.export() or tf2onnx"
+    },
+    {
+      "step": 5,
+      "name": "Convert to TFLite",
+      "description": "Use onnx2tf for direct ONNX to TFLite conversion",
+      "command": "onnx2tf -i model.onnx -o tflite_output"
+    },
+    {
+      "step": 6,
+      "name": "Quantization",
+      "description": "Apply INT8 quantization for mobile deployment",
+      "size_reduction": "75% smaller, 2-4x faster inference"
+    }
+  ]
+}
